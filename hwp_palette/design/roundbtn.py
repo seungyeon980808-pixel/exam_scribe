@@ -138,6 +138,7 @@ class RoundButton(tk.Canvas):
         self.bind("<FocusOut>", lambda e: self._set_focus(False))
         self.bind("<Return>", lambda e: self._invoke())
         self.bind("<space>", lambda e: self._invoke())
+        self.bind("<Destroy>", self._on_destroy, add="+")
 
     # ── 크기 ────────────────────────────────────────
     def fit(self, pad_x=12, pad_y=6, min_w=0):
@@ -316,6 +317,10 @@ class RoundButton(tk.Canvas):
             except Exception:
                 pass
             self._job = None
+
+    def _on_destroy(self, event):
+        if event.widget is self:
+            self._cancel()
 
     def _to(self, color):
         """지금 색에서 color 로 이징 곡선을 따라 옮긴다."""

@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 210" width="300pt" height="210pt">
+  <style>.l { fill:none; stroke:#000; stroke-width:1.0; stroke-linecap:butt; stroke-linejoin:miter; } .l2 { fill:none; stroke:#000; stroke-width:0.8; stroke-linecap:butt; } .l3 { fill:none; stroke:#000; stroke-width:1.3; stroke-linecap:butt; } .f { fill:#000; stroke:none; } .t { fill:#000; font-family:'HCR Batang','Hamchorom Batang','Noto Serif KR','Batang','Serif',serif; font-size:9.5pt; text-anchor:middle; dominant-baseline:central; } .tl { fill:#000; font-family:'HCR Batang','Hamchorom Batang','Noto Serif KR','Batang','Serif',serif; font-size:9.5pt; text-anchor:start; dominant-baseline:hanging; } .tr { fill:#000; font-family:'HCR Batang','Hamchorom Batang','Noto Serif KR','Batang','Serif',serif; font-size:9.5pt; text-anchor:end; dominant-baseline:central; } .tc { fill:#000; font-family:'HCR Batang','Hamchorom Batang','Noto Serif KR','Batang','Serif',serif; font-size:8pt; text-anchor:middle; dominant-baseline:central; } .tl2 { fill:#000; font-family:'HCR Batang','Hamchorom Batang','Noto Serif KR','Batang','Serif',serif; font-size:8.5pt; text-anchor:start; } </style>
+  <line x1="32.0" y1="172.0" x2="268.0" y2="172.0" class="l"/>
+  <polygon points="268.0,172.0 263.0,174.4 263.0,169.6" class="f"/>
+  <line x1="38.0" y1="178.0" x2="38.0" y2="32.0" class="l"/>
+  <polygon points="38.0,32.0 40.4,37.0 35.6,37.0" class="f"/>
+  <line x1="94.0" y1="169.0" x2="94.0" y2="175.0" class="l2"/>
+  <text x="94.0" y="181.0" class="tc">25</text>
+  <line x1="35.0" y1="138.5" x2="41.0" y2="138.5" class="l2"/>
+  <text x="28.0" y="138.5" class="tr">25</text>
+  <line x1="150.0" y1="169.0" x2="150.0" y2="175.0" class="l2"/>
+  <text x="150.0" y="181.0" class="tc">50</text>
+  <line x1="35.0" y1="105.0" x2="41.0" y2="105.0" class="l2"/>
+  <text x="28.0" y="105.0" class="tr">50</text>
+  <line x1="206.0" y1="169.0" x2="206.0" y2="175.0" class="l2"/>
+  <text x="206.0" y="181.0" class="tc">75</text>
+  <line x1="35.0" y1="71.5" x2="41.0" y2="71.5" class="l2"/>
+  <text x="28.0" y="71.5" class="tr">75</text>
+  <line x1="262.0" y1="169.0" x2="262.0" y2="175.0" class="l2"/>
+  <text x="262.0" y="181.0" class="tc">100</text>
+  <line x1="35.0" y1="38.0" x2="41.0" y2="38.0" class="l2"/>
+  <text x="28.0" y="38.0" class="tr">100</text>
+  <text x="32.0" y="181.0" class="tc">O</text>
+  <circle cx="49.2" cy="158.6" r="2.2" class="f"/>
+  <text x="58.2" y="152.6" class="tl">A</text>
+  <line x1="49.2" y1="158.6" x2="94.0" y2="125.1" class="l"/>
+  <circle cx="94.0" cy="125.1" r="2.2" class="f"/>
+  <text x="103.0" y="119.1" class="tl">B</text>
+  <line x1="94.0" y1="125.1" x2="150.0" y2="98.3" class="l"/>
+  <circle cx="150.0" cy="98.3" r="2.2" class="f"/>
+  <text x="159.0" y="92.3" class="tl">C</text>
+  <line x1="150.0" y1="98.3" x2="206.0" y2="67.5" class="l"/>
+  <circle cx="206.0" cy="67.5" r="2.2" class="f"/>
+  <text x="215.0" y="61.5" class="tl">D</text>
+  <line x1="206.0" y1="67.5" x2="250.8" y2="44.7" class="l"/>
+  <circle cx="250.8" cy="44.7" r="2.2" class="f"/>
+  <text x="259.8" y="38.7" class="tl">E</text>
+</svg>

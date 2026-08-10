@@ -188,6 +188,8 @@ class StorePanel(tk.Frame):
         self._photo = None                  # ⚠ 참조를 붙들어야 그림이 안 사라진다
         self._name_font = None              # 카드 이름 재기용 Font — 만들기가 비싸 재사용
         self._states_job = None             # refresh_states 모아치기 예약 (after id)
+        self._prebuild_job = None           # 분류 미리 짓기 예약 (after id)
+        self.bind("<Destroy>", self._cancel_after_jobs, add="+")
 
         head = tk.Frame(self, bg=CARD)
         head.pack(fill="x", padx=8, pady=(6, 2))
@@ -430,11 +432,18 @@ class StorePanel(tk.Frame):
         return sub if sub in (self._subcats.get(cat) or []) else ""
 
     def _prebuild_rest(self, lib=None):
+        if self._prebuild_job is not None:
+            try:
+                self.after_cancel(self._prebuild_job)
+            except Exception:
+                pass
+            self._prebuild_job = None
         rest = [(k, self.active_sub(k)) for _l, k in CATS
                 if (k, self.active_sub(k)) not in self._cat_cache]
         if not rest:
             return
         def step(keys, lib_):
+            self._prebuild_job = None
             if not keys or not self.winfo_exists():
                 return
             k, sub = keys[0]
@@ -444,11 +453,29 @@ class StorePanel(tk.Frame):
                     self._cat_cache[(k, sub)] = got
                 except Exception as e:
                     applog.exc(f"창고: '{k}' 미리 짓기 실패", e)
-            self.after(30, lambda: step(keys[1:], lib_))
+            self._prebuild_job = self.after(30, lambda: step(keys[1:], lib_))
         try:
-            self.after(120, lambda: step(rest, lib or library.load()))
+            self._prebuild_job = self.after(
+                120, lambda: step(rest, lib or library.load()))
         except Exception:
             pass
+
+    def _cancel_after_jobs(self, event=None):
+        """창이 사라질 때 예약 작업을 통째로 거둔다.
+
+        파괴된 위젯의 after 콜백이 남으면 다음 update에서 Tk가
+        ``invalid command name ...<lambda>``를 출력한다.
+        """
+        if event is not None and event.widget is not self:
+            return
+        for name in ("_prebuild_job", "_states_job"):
+            job = getattr(self, name, None)
+            if job is not None:
+                try:
+                    self.after_cancel(job)
+                except Exception:
+                    pass
+                setattr(self, name, None)
 
     def _build_cat(self, key, lib=None, sub=""):
         """분류 하나(의 하위 분류 하나)의 판을 만든다 — 여기서만 타일을 새로 만든다."""

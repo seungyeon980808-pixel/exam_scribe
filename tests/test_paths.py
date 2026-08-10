@@ -37,6 +37,11 @@ class SourceRunTest(unittest.TestCase):
     def test_자원_폴더는_프로젝트_폴더(self):
         self.assertEqual(paths.resource_dir(), ROOT)
 
+    def test_내장_호스트가_데이터_경로를_분리할_수_있다(self):
+        with tempfile.TemporaryDirectory() as tmp, \
+             mock.patch.dict("os.environ", {"HWPPAL_DATA_DIR": tmp}):
+            self.assertEqual(paths.data_dir(), pathlib.Path(tmp).resolve())
+
     def test_설정_경로가_data_아래로_간다(self):
         from hwp_palette.core import settings
         from hwp_palette.model import library

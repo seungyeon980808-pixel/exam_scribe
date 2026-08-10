@@ -246,6 +246,28 @@ def _png_size_mm(path):
         return None
 
 
+def _image_size_mm(path):
+    r"""지원 그림의 인쇄 크기(mm). PNG 메타데이터를 우선하고 나머지는 Pillow로 읽는다.
+
+    JPEG처럼 pHYs 청크가 없는 형식도 단 폭 제한을 받아야 한다. DPI가 없는 파일은
+    화면 이미지의 관례값 96dpi로 계산한 뒤 아래 삽입기가 단 폭에 맞춰 축소한다.
+    """
+    png_size = _png_size_mm(path)
+    if png_size:
+        return png_size
+    try:
+        from PIL import Image
+        with Image.open(path) as image:
+            width_px, height_px = image.size
+            dpi = image.info.get("dpi") or (96.0, 96.0)
+            dpi_x = float(dpi[0] or 96.0)
+            dpi_y = float((dpi[1] if len(dpi) > 1 else dpi_x) or 96.0)
+            return width_px / dpi_x * 25.4, height_px / dpi_y * 25.4
+    except Exception as e:
+        applog.exc(f"그림 크기 읽기 실패 ({path}) — 한글 기본 크기로 넣는다", e)
+        return None
+
+
 def _insert_picture_sized(hwp, path):
     r"""그림 삽입. 셀 밖이면 PNG 에 새겨진 실제 크기로, 셀 안이면 셀에 맞춘다.
 
@@ -272,12 +294,12 @@ def _insert_picture_sized(hwp, path):
             actual_path = path
     ctrl = hwp.insert_picture(str(actual_path), treat_as_char=True, embedded=True,
                               sizeoption=3)
+    size = None if hwp_engine.in_table() else _image_size_mm(actual_path)
     if exam_style and actual_path != path:
         try:
             import os; os.unlink(actual_path)
         except Exception:
             pass
-    size = None if hwp_engine.in_table() else _png_size_mm(actual_path)
     if not size or ctrl is None:
         return
     w_mm, h_mm = size
@@ -1467,7 +1489,12 @@ def open_form(path, strip_markers=False):
     변환(\양식라벨\)으로 여는 경우에는 그 표시를 보고 내용을 채우므로 지우면 안 된다.
     """
     hwp = _h()
-    hwp.FileNew()
+    # 독립 CLI/미리보기 인스턴스는 이미 빈 문서를 하나 갖고 있다. 거기서 또
+    # FileNew를 부르면 별도 한글 창이 생겨 자동화가 끝난 뒤 빈 창이 남고,
+    # 저장 대상도 어느 창인지 흔들린다. 현재 문서에 내용이 있을 때만 새 문서를
+    # 열어 사용자의 작업을 보존하고, 빈 문서면 그 자리에서 바로 양식을 연다.
+    if not doc_is_empty():
+        hwp.FileNew()
     hwp.open(str(path))
     if strip_markers:
         try:

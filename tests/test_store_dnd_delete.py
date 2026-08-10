@@ -146,6 +146,14 @@ class DropOnSubTab(unittest.TestCase):
             self.panel._tile_release(_Ev(x, y))
         self.assertEqual(moved, [("템플릿", "t1", made)])
 
+    def test_판을_지우면_미리짓기_예약도_지운다(self):
+        """파괴된 위젯의 lambda가 나중 update에서 Tcl 경고를 내지 않는다."""
+        self.assertIsNotNone(self.panel._prebuild_job)
+        self.panel.destroy()
+        self.root.update()
+        self.assertIsNone(self.panel._prebuild_job)
+        self.assertIsNone(self.panel._states_job)
+
     def test_제자리에_놓으면_아무_일도_안_한다(self):
         moved = []
         with mock.patch.object(library, "set_subcat",

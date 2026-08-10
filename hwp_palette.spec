@@ -2,13 +2,14 @@
 """PyInstaller 설정 (UI 제안 20).
 
 빌드:  python build_exe.py       (또는  pyinstaller hwp_palette.spec)
-결과:  dist/hwp_palette.exe      — 파이썬이 없는 PC 에서도 그대로 실행
+결과:  dist/hwp_palette/hwp_palette.exe
+       — 파이썬이 없는 PC 에서도 그대로 실행
 
-onefile 인 이유
-  받는 사람에게 "이 폴더 통째로 복사하세요"라고 설명할 필요 없이 파일 하나만
-  건네면 된다. 대신 실행할 때마다 임시 폴더에 풀리므로 첫 실행이 몇 초 느리다.
-  설정·라이브러리는 임시 폴더가 아니라 **exe 옆**에 저장된다(paths.py 참고) —
-  임시 폴더는 프로그램이 끝나면 지워지기 때문이다.
+onedir 인 이유
+  onefile 101MB 판은 실행할 때마다 임시 폴더에 풀리며 6~19초가
+  걸렸다(2026-08-10 실측). 비설치형은 어차피 zip을 풀고, 설치형은
+  설치 폴더를 쓰므로 단일 exe가 주는 이득이 없다. onedir로 바꾸면
+  압축 해제를 설치/풀기 때 한 번만 하고, 매 실행은 바로 시작한다.
 
 console=False 인 이유
   GUI 프로그램이라 검은 콘솔 창이 같이 뜨면 지저분하다. 대신 오류를 볼 곳이
@@ -25,9 +26,15 @@ a = Analysis(
     ["main.py"],
     pathex=[str(HERE)],
     binaries=[],
-    # 아이콘은 코드에서 파일로 읽으므로 같이 넣어야 한다 (paths.RESOURCE_DIR)
-    # icon-96.png = 창 안 아이콘, folder.ico = '내 물감' 폴더에 입히는 아이콘
-    datas=[("assets/icon-96.png", "assets"), ("assets/folder.ico", "assets")],
+    # 코드가 파일로 읽는 자원은 모두 포함한다 (paths.RESOURCE_DIR).
+    # icons/ 누락 때 EXE만 도구줄이 문자 대체로 내려갔고,
+    # excel 틀 누락은 문항 엑셀을 EXE에서만 못 만드는 원인이었다.
+    datas=[
+        ("assets/icon-96.png", "assets"),
+        ("assets/folder.ico", "assets"),
+        ("assets/icons", "assets/icons"),
+        ("assets/excel_block_template.xlsm", "assets"),
+    ],
     # pyhwpx 는 한글 COM 타입라이브러리를 실행 중에 만들어 쓴다. PyInstaller 의
     # 정적 분석으로는 win32com.client 의 동적 생성 경로가 안 잡혀서, 명시하지
     # 않으면 exe 에서만 "한글을 찾을 수 없습니다"가 난다.
@@ -66,9 +73,8 @@ pyz = PYZ(a.pure)
 exe = EXE(
     pyz,
     a.scripts,
-    a.binaries,
-    a.datas,
     [],
+    exclude_binaries=True,
     name="hwp_palette",
     debug=False,
     bootloader_ignore_signals=False,
@@ -77,4 +83,13 @@ exe = EXE(
     runtime_tmpdir=None,
     console=False,
     icon=str(HERE / "assets" / "icon.ico"),
+)
+
+coll = COLLECT(
+    exe,
+    a.binaries,
+    a.datas,
+    strip=False,
+    upx=False,
+    name="hwp_palette",
 )

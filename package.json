@@ -1,0 +1,16 @@
+{
+  "name": "hwp-palette-tooling",
+  "private": true,
+  "description": "Local HWP/HWPX inspection tools used to verify HwpPalette output",
+  "scripts": {
+    "kordoc": "kordoc"
+  },
+  "devDependencies": {
+    "kordoc": "4.7.2",
+    "pdfjs-dist": "6.2.108"
+  },
+  "overrides": {
+    "adm-zip": "0.6.0",
+    "sharp": "0.35.3"
+  }
+}

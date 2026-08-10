@@ -22,6 +22,7 @@ ref 를 갖는 블럭은 template/form 둘뿐이다. char·function·builtin 은
     칩(zip, .hwpal)
      ├ manifest.json    이름·만든이·설명·버전
      ├ tab.json         ← 있으면 팔레트 칩, 없으면 그냥 물감 꾸러미
+     ├ exam.json        ← 팔레트가 담은 양식·템플릿의 슬롯 계약
      ├ library.json     물감 목록 (id 대신 origin_id)
      └ fragments/*.hwp  조각 파일
 
@@ -42,11 +43,26 @@ CHIP_EXT = ".hwpal"
 CHIP_VERSION = 1
 _MANIFEST = "chip.json"
 _TAB = "tab.json"
+_EXAM = "exam.json"
+EXAM_SCHEMA_VERSION = 1
 
 # 물감을 가리키는 블럭 종류. 나머지(char·function·builtin)는 내용을 스스로
 # 지니고 있어 옮길 때 손댈 것이 없다.
 _REF_TYPES = ("template", "form")
 _TYPE_CATEGORY = {"template": "템플릿", "form": "양식"}
+
+
+def _walk_blocks(blocks):
+    """팔레트 블럭을 화면 순서대로 순회한다(겹침 묶음 안쪽 포함).
+
+    stack은 단순한 UI 장식이 아니라 여러 물감을 한 칸에 넣는 컨테이너다.
+    예전 구현은 최상위 블럭만 훑어서 stack 안의 템플릿·양식 파일을 칩에서
+    누락했다. 내보내기·누락 검사·ref 재연결이 모두 같은 순회를 사용한다.
+    """
+    for block in blocks or []:
+        yield block
+        if block.get("type") == "stack":
+            yield from _walk_blocks(block.get("items", []))
 
 
 # ── 만들기 ──────────────────────────────────────────────
@@ -60,7 +76,7 @@ def required_items(tab):
     by_id = {it["id"]: (cat, it) for cat in library.CATEGORIES
              for it in data[cat]}
     out, seen = [], set()
-    for block in tab.get("blocks", []):
+    for block in _walk_blocks(tab.get("blocks", [])):
         if block.get("type") not in _REF_TYPES:
             continue
         ref = block.get("ref")
@@ -81,7 +97,7 @@ def missing_refs(tab):
     data = library.load()
     have = {it["id"] for cat in library.CATEGORIES for it in data[cat]}
     return [b.get("template") or b.get("form") or "?"
-            for b in tab.get("blocks", [])
+            for b in _walk_blocks(tab.get("blocks", []))
             if b.get("type") in _REF_TYPES and b.get("ref") not in have]
 
 
@@ -95,7 +111,8 @@ def export_tab(tab, dest_path, note="", author=""):
     pairs = required_items(tab)
     n = library.export_items(pairs, dest_path)  # 물감 + 조각 + manifest
     _add_chip_parts(dest_path, tab=tab,
-                    name=tab.get("name", "팔레트"), note=note, author=author)
+                    name=tab.get("name", "팔레트"), note=note, author=author,
+                    exam=_exam_manifest(tab, pairs))
     return {"items": n, "blocks": len(tab.get("blocks", []))}
 
 
@@ -107,11 +124,48 @@ def export_items(pairs, dest_path, name, note="", author=""):
     간 것을 아무도 모른다.
     """
     n = library.export_items(pairs, dest_path)
-    _add_chip_parts(dest_path, tab=None, name=name, note=note, author=author)
+    _add_chip_parts(dest_path, tab=None, name=name, note=note, author=author,
+                    exam=None)
     return {"items": n}
 
 
-def _add_chip_parts(dest_path, tab, name, note, author):
+def _exam_manifest(tab, pairs):
+    """ExamPool이 HwpPalette 전체를 설치하지 않고도 슬롯 계약을 읽게 한다.
+
+    역할(direct/hapdap 등)은 사용처가 정한다. 칩은 이름을 억지로 추측하지 않고,
+    실제로 포함한 양식·템플릿의 안정된 라벨과 슬롯만 기록한다. 같은 라벨의 새
+    칩을 등록하면 ExamPool이 해당 조각만 교체할 수 있다.
+    """
+    items = []
+    for category, item in pairs:
+        if category not in _TYPE_CATEGORY.values():
+            continue
+        label = library.normalize_label(item.get("label"))
+        if not label:
+            continue
+        slots = list(item.get("slot_names") or [])
+        count = int(item.get("slot_count") or len(slots))
+        items.append({
+            "category": category,
+            "name": item.get("name") or label,
+            "label": label,
+            "slot_count": count,
+            "slot_names": slots,
+        })
+    name = str(tab.get("name") or "팔레트")
+    hinted = str(tab.get("layout_style") or "").strip().lower()
+    if hinted not in ("school", "suneung"):
+        hinted = "suneung" if "수능" in name else ("school" if "학교" in name else "auto")
+    return {
+        "schema_version": EXAM_SCHEMA_VERSION,
+        "kind": "exam_palette",
+        "name": name,
+        "layout_style": hinted,
+        "items": items,
+    }
+
+
+def _add_chip_parts(dest_path, tab, name, note, author, exam=None):
     """library.export_items 가 만든 zip 에 칩 표지(+탭)를 덧붙인다."""
     manifest = {"chip_version": CHIP_VERSION, "name": name,
                 "note": note, "author": author,
@@ -121,6 +175,8 @@ def _add_chip_parts(dest_path, tab, name, note, author):
                                           indent=2))
         if tab is not None:
             zf.writestr(_TAB, json.dumps(tab, ensure_ascii=False, indent=2))
+        if exam is not None:
+            zf.writestr(_EXAM, json.dumps(exam, ensure_ascii=False, indent=2))
 
 
 # ── 읽어 보기 (등록 전 미리보기) ────────────────────────
@@ -140,6 +196,8 @@ def peek(src_path):
                     if _MANIFEST in names else {})
         tab = (json.loads(zf.read(_TAB).decode("utf-8"))
                if _TAB in names else None)
+        exam = (json.loads(zf.read(_EXAM).decode("utf-8"))
+                if _EXAM in names else None)
         if library._MANIFEST_NAME not in names:
             raise ValueError("올바르지 않은 칩 파일입니다 — library.json이 없습니다")
         lib = json.loads(zf.read(library._MANIFEST_NAME).decode("utf-8"))
@@ -167,7 +225,7 @@ def peek(src_path):
             "note": manifest.get("note", ""),
             "author": manifest.get("author", ""),
             "made_with": manifest.get("made_with", ""),
-            "tab": tab, "items": items, "known": known,
+            "tab": tab, "exam": exam, "items": items, "known": known,
             "conflicts": conflicts}
 
 
@@ -185,6 +243,9 @@ def relink(blocks, id_map):
     out, lost = [], 0
     for block in blocks:
         block = dict(block)
+        if block.get("type") == "stack":
+            block["items"], nested_lost = relink(block.get("items", []), id_map)
+            lost += nested_lost
         if block.get("type") in _REF_TYPES and block.get("ref"):
             new = id_map.get(block["ref"])
             if new:

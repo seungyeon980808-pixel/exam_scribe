@@ -28,6 +28,8 @@ for _stream in (sys.stdout, sys.stderr):
 HERE = pathlib.Path(__file__).resolve().parent
 SPEC = HERE / "hwp_palette.spec"
 DIST = HERE / "dist"
+APP_DIR = DIST / "hwp_palette"
+EXE = APP_DIR / "hwp_palette.exe"
 
 # 이것들은 **개인 데이터**다. exe 안에 섞여 들어가면 남에게 건넬 때 내 팔레트와
 # 저장해둔 조각이 통째로 딸려 간다. spec 의 datas 에 없으니 지금은 안 들어가지만,
@@ -45,6 +47,10 @@ def check():
         problems.append("assets/icon.ico 가 없습니다 (exe 아이콘)")
     if not (HERE / "assets" / "icon-96.png").exists():
         problems.append("assets/icon-96.png 가 없습니다 (창 안 아이콘)")
+    if not (HERE / "assets" / "icons").is_dir():
+        problems.append("assets/icons 폴더가 없습니다 (도구줄·블럭 아이콘)")
+    if not (HERE / "assets" / "excel_block_template.xlsm").exists():
+        problems.append("assets/excel_block_template.xlsm 이 없습니다 (문항 엑셀 틀)")
     try:
         import PyInstaller                      # noqa: F401
     except ImportError:
@@ -86,12 +92,13 @@ def main():
         print("\n빌드 실패 — 위 오류를 확인하세요")
         return r.returncode
 
-    exe = DIST / "hwp_palette.exe"
-    if not exe.exists():
+    if not EXE.exists():
         print("\n빌드는 끝났는데 exe 가 없습니다 — spec 의 name 을 확인하세요")
         return 1
 
-    print(f"\n완성: {exe}  ({exe.stat().st_size / 1024 / 1024:.1f} MB)")
+    total = sum(p.stat().st_size for p in APP_DIR.rglob("*") if p.is_file())
+    print(f"\n완성: {EXE}")
+    print(f"  배포 폴더 전체: {total / 1024 / 1024:.1f} MB")
     print("\n건네기 전에 확인할 것")
     print("  1. 파이썬이 없는 PC 에서 실행되는지 (다른 컴퓨터에서 한 번)")
     print("  2. 한글을 켜고 → 표시등이 파란지 → 변환이 되는지")

@@ -100,6 +100,13 @@ class ExportTest(_Base):
         ]}
         self.assertEqual(len(chip.required_items(tab)), 1)
 
+    def test_겹침_묶음_안의_물감도_빠짐없이_담긴다(self):
+        a = self._make_template("보기")
+        tab = {"name": "수능", "blocks": [{"type": "stack", "items": [
+            {"type": "template", "ref": a, "template": "보기"}]}]}
+        self.assertEqual([it["name"] for _cat, it in chip.required_items(tab)],
+                         ["보기"])
+
     def test_없는_물감을_가리키면_알려준다(self):
         tab = {"name": "수능", "blocks": [
             {"type": "template", "ref": "없는id", "template": "사라진표"}]}
@@ -115,8 +122,15 @@ class ExportTest(_Base):
             names = zf.namelist()
         self.assertIn("chip.json", names)
         self.assertIn("tab.json", names)
+        self.assertIn("exam.json", names)
         self.assertIn("library.json", names)
         self.assertTrue(any(n.startswith("fragments/") for n in names))
+
+        info = chip.peek(dest)
+        self.assertEqual(info["exam"]["schema_version"], 1)
+        self.assertEqual(info["exam"]["layout_style"], "suneung")
+        self.assertEqual(info["exam"]["items"][0]["label"], "소1사진")
+        self.assertEqual(info["exam"]["items"][0]["slot_count"], 0)
 
     def test_물감_꾸러미는_탭이_없다(self):
         """같은 형식, 입구만 둘 — tab.json 이 없으면 물감 꾸러미."""
@@ -126,6 +140,7 @@ class ExportTest(_Base):
                           dest, name="내 템플릿")
         with zipfile.ZipFile(dest) as zf:
             self.assertNotIn("tab.json", zf.namelist())
+            self.assertNotIn("exam.json", zf.namelist())
 
 
 class InstallTest(_Base):
@@ -385,6 +400,13 @@ class RelinkTest(unittest.TestCase):
                   {"type": "function", "actions": [{"func": "굵게"}]}]
         out, lost = chip.relink(blocks, {})
         self.assertEqual(out, blocks)
+        self.assertEqual(lost, 0)
+
+    def test_겹침_묶음_안의_ref도_재연결한다(self):
+        blocks = [{"type": "stack", "items": [
+            {"type": "template", "ref": "old", "template": "보기"}]}]
+        out, lost = chip.relink(blocks, {"old": "new"})
+        self.assertEqual(out[0]["items"][0]["ref"], "new")
         self.assertEqual(lost, 0)
 
 

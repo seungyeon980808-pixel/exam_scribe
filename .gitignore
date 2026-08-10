@@ -48,6 +48,10 @@ __pycache__/
 .venv/
 venv/
 
+# Node 기반 HWP 분석 도구(kordoc)의 로컬 설치물
+node_modules/
+tools/bin/
+
 # 빌드 산출물
 dist/
 build/

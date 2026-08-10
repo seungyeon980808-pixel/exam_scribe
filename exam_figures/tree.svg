@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 284" width="400pt" height="284pt">
+  <style>.figure-line { fill: none; stroke: #000; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; } .figure-thin { fill: none; stroke: #000; stroke-width: 0.8; stroke-linecap: round; } .figure-fill { fill: #000; stroke: none; } .figure-dash { fill: none; stroke: #000; stroke-width: 0.8; stroke-dasharray: 4,3; } .figure-text { fill: #000; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; font-size: 9pt; text-anchor: middle; dominant-baseline: central; } .figure-text-left { fill: #000; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; font-size: 9pt; text-anchor: start; } .figure-arrow { fill: #000; stroke: none; } .figure-dot { fill: #000; stroke: none; } </style>
+  <rect x="150.0" y="30.0" width="100.0" height="24.0" class="figure-line"/>
+  <text x="200.0" y="42.0" class="figure-text">생물 분류계</text>
+  <rect x="55.0" y="70.0" width="90.0" height="22.0" class="figure-line"/>
+  <text x="100.0" y="81.0" class="figure-text">동물계</text>
+  <line x1="200.0" y1="54.0" x2="100.0" y2="70.0" class="figure-line"/>
+  <rect x="255.0" y="48.0" width="90.0" height="22.0" class="figure-line"/>
+  <text x="300.0" y="59.0" class="figure-text">척추동물</text>
+  <line x1="145.0" y1="81.0" x2="255.0" y2="59.0" class="figure-line"/>
+  <rect x="255.0" y="92.0" width="90.0" height="22.0" class="figure-line"/>
+  <text x="300.0" y="103.0" class="figure-text">무척추동물</text>
+  <line x1="145.0" y1="81.0" x2="255.0" y2="103.0" class="figure-line"/>
+  <rect x="55.0" y="177.0" width="90.0" height="22.0" class="figure-line"/>
+  <text x="100.0" y="188.0" class="figure-text">식물계</text>
+  <line x1="200.0" y1="54.0" x2="100.0" y2="177.0" class="figure-line"/>
+  <rect x="255.0" y="155.0" width="90.0" height="22.0" class="figure-line"/>
+  <text x="300.0" y="166.0" class="figure-text">종자식물</text>
+  <line x1="145.0" y1="188.0" x2="255.0" y2="166.0" class="figure-line"/>
+  <rect x="255.0" y="199.0" width="90.0" height="22.0" class="figure-line"/>
+  <text x="300.0" y="210.0" class="figure-text">포자식물</text>
+  <line x1="145.0" y1="188.0" x2="255.0" y2="210.0" class="figure-line"/>
+</svg>

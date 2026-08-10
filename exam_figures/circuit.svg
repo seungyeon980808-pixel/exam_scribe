@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320pt" height="200pt">
+  <style>.figure-line { fill: none; stroke: #000; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; } .figure-thin { fill: none; stroke: #000; stroke-width: 0.8; stroke-linecap: round; } .figure-fill { fill: #000; stroke: none; } .figure-dash { fill: none; stroke: #000; stroke-width: 0.8; stroke-dasharray: 4,3; } .figure-text { fill: #000; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; font-size: 9pt; text-anchor: middle; dominant-baseline: central; } .figure-text-left { fill: #000; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; font-size: 9pt; text-anchor: start; } .figure-arrow { fill: #000; stroke: none; } .figure-dot { fill: #000; stroke: none; } </style>
+  <line x1="52.0" y1="94.0" x2="68.0" y2="94.0" class="figure-thin"/>
+  <line x1="49.0" y1="103.0" x2="71.0" y2="103.0" class="figure-line"/>
+  <line x1="60.0" y1="94.0" x2="60.0" y2="88.0" class="figure-line"/>
+  <line x1="60.0" y1="103.0" x2="60.0" y2="112.0" class="figure-line"/>
+  <line x1="70.0" y1="90.0" x2="120.0" y2="90.0" class="figure-line"/>
+  <line x1="70.0" y1="110.0" x2="120.0" y2="110.0" class="figure-line"/>
+  <rect x="135.0" y="92.0" width="30.0" height="16.0" class="figure-line"/>
+  <line x1="135.0" y1="100.0" x2="130.0" y2="100.0" class="figure-line"/>
+  <line x1="165.0" y1="100.0" x2="170.0" y2="100.0" class="figure-line"/>
+  <line x1="170.0" y1="90.0" x2="250.0" y2="90.0" class="figure-line"/>
+  <line x1="170.0" y1="110.0" x2="250.0" y2="110.0" class="figure-line"/>
+  <line x1="276.0" y1="92.0" x2="276.0" y2="108.0" class="figure-line"/>
+  <line x1="284.0" y1="92.0" x2="284.0" y2="108.0" class="figure-line"/>
+  <line x1="276.0" y1="92.0" x2="272.0" y2="92.0" class="figure-line"/>
+  <line x1="284.0" y1="92.0" x2="288.0" y2="92.0" class="figure-line"/>
+  <line x1="290.0" y1="90.0" x2="340.0" y2="90.0" class="figure-line"/>
+  <line x1="290.0" y1="110.0" x2="340.0" y2="110.0" class="figure-line"/>
+  <circle cx="340.0" cy="100.0" r="2.5" class="figure-dot"/>
+  <line x1="60.0" y1="90.0" x2="30.0" y2="90.0" class="figure-line"/>
+  <line x1="60.0" y1="110.0" x2="30.0" y2="110.0" class="figure-line"/>
+</svg>

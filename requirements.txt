@@ -1,3 +1,10 @@
 pyhwpx
 openpyxl
 olefile
+opencv-python
+numpy
+torch
+diffusers
+transformers
+accelerate
+safetensors

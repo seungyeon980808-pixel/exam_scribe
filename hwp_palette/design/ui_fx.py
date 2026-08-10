@@ -97,12 +97,32 @@ def _set_alpha(win, value):
         return False            # -alpha 를 못 쓰는 환경 — 전환 없이 즉시 처리
 
 
+def _cancel_fade(win):
+    job = getattr(win, "_fx_fade_job", None)
+    if job is not None:
+        try:
+            win.after_cancel(job)
+        except Exception:
+            pass
+        win._fx_fade_job = None
+
+
 def fade(win, to, ms=None, on_done=None, ease=True):
     """창 불투명도를 지금 값에서 to(0~1)로 옮긴다. 끝나면 on_done.
 
     -alpha 를 지원하지 않으면 곧바로 on_done 을 부른다 — 전환은 장식이므로
     없다고 해서 동작이 막히면 안 된다.
     """
+    _cancel_fade(win)
+    if not getattr(win, "_fx_fade_destroy_bound", False):
+        try:
+            win.bind(
+                "<Destroy>",
+                lambda e: _cancel_fade(win) if e.widget is win else None,
+                add="+")
+            win._fx_fade_destroy_bound = True
+        except Exception:
+            pass
     try:
         start = float(win.attributes("-alpha"))
     except Exception:
@@ -118,6 +138,7 @@ def fade(win, to, ms=None, on_done=None, ease=True):
         return
 
     def step(k):
+        win._fx_fade_job = None
         try:
             if not win.winfo_exists():
                 return
@@ -127,11 +148,14 @@ def fade(win, to, ms=None, on_done=None, ease=True):
         _set_alpha(win, start + (to - start) * t)
         if k < steps:
             try:
-                win.after(interval, lambda: step(k + 1))
+                win._fx_fade_job = win.after(
+                    interval, lambda: step(k + 1))
             except Exception:
                 pass
-        elif on_done:
-            on_done()
+        else:
+            win._fx_fade_job = None
+            if on_done:
+                on_done()
 
     step(1)
 
@@ -318,3 +342,5 @@ def attach(widget, base, hover=None, press=None):
     widget.bind("<Leave>", _on_leave, add="+")
     widget.bind("<ButtonPress-1>", _on_press, add="+")
     widget.bind("<ButtonRelease-1>", _on_release, add="+")
+    widget.bind("<Destroy>", lambda e: _cancel() if e.widget is widget else None,
+                add="+")

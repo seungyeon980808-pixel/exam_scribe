@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 290" width="300pt" height="290pt">
+  <style>.figure-line { fill: none; stroke: #000; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; } .figure-thin { fill: none; stroke: #000; stroke-width: 0.8; stroke-linecap: round; } .figure-fill { fill: #000; stroke: none; } .figure-dash { fill: none; stroke: #000; stroke-width: 0.8; stroke-dasharray: 4,3; } .figure-text { fill: #000; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; font-size: 9pt; text-anchor: middle; dominant-baseline: central; } .figure-text-left { fill: #000; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; font-size: 9pt; text-anchor: start; } .figure-arrow { fill: #000; stroke: none; } .figure-dot { fill: #000; stroke: none; } </style>
+  <rect x="110.0" y="6.0" width="80.0" height="28.0" class="figure-line"/>
+  <text x="150.0" y="20.0" class="figure-text">세포 호흡</text>
+  <line x1="150.0" y1="34.0" x2="150.0" y2="68.5" class="figure-line"/>
+  <polygon points="150.0,68.5 147.9,62.5 152.1,62.5" class="figure-arrow"/>
+  <rect x="110.0" y="68.5" width="80.0" height="28.0" class="figure-line"/>
+  <text x="150.0" y="82.5" class="figure-text">해당 과정</text>
+  <line x1="150.0" y1="96.5" x2="150.0" y2="131.0" class="figure-line"/>
+  <polygon points="150.0,131.0 147.9,125.0 152.1,125.0" class="figure-arrow"/>
+  <rect x="110.0" y="131.0" width="80.0" height="28.0" class="figure-line"/>
+  <text x="150.0" y="145.0" class="figure-text">TCA 회로</text>
+  <line x1="150.0" y1="159.0" x2="150.0" y2="193.5" class="figure-line"/>
+  <polygon points="150.0,193.5 147.9,187.5 152.1,187.5" class="figure-arrow"/>
+  <rect x="110.0" y="193.5" width="80.0" height="28.0" class="figure-line"/>
+  <text x="150.0" y="207.5" class="figure-text">전자전달계</text>
+  <line x1="150.0" y1="221.5" x2="150.0" y2="256.0" class="figure-line"/>
+  <polygon points="150.0,256.0 147.9,250.0 152.1,250.0" class="figure-arrow"/>
+  <rect x="110.0" y="256.0" width="80.0" height="28.0" class="figure-line"/>
+  <text x="150.0" y="270.0" class="figure-text">ATP 합성</text>
+</svg>

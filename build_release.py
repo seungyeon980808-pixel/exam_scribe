@@ -15,6 +15,7 @@ zip 트랙이 막히면 안 되므로 설치형 실패로 전체를 죽이지 �
 """
 
 import pathlib
+import os
 import shutil
 import subprocess
 import sys
@@ -38,6 +39,8 @@ ISS = HERE / "installer" / "hwp_palette.iss"
 
 # ISCC(Inno Setup 컴파일러)를 찾는 자리 — PATH 에 없어도 기본 설치 자리를 본다
 _ISCC_CANDIDATES = [
+    str(pathlib.Path(os.environ.get("LOCALAPPDATA", ""))
+        / "Programs" / "Inno Setup 6" / "ISCC.exe"),
     r"C:\Program Files (x86)\Inno Setup 6\ISCC.exe",
     r"C:\Program Files\Inno Setup 6\ISCC.exe",
 ]
@@ -53,12 +56,19 @@ def _find_iscc():
     return None
 
 
-def make_portable_zip(exe):
-    """비설치형 zip — exe 하나만 담는다. '내 물감' 폴더는 첫 실행이 만든다."""
+def make_portable_zip(app_dir):
+    """비설치형 zip — 빠른 onedir 배포 폴더를 통째로 담는다."""
+    app_dir = pathlib.Path(app_dir)
+    exe = app_dir / "hwp_palette.exe"
+    if not exe.is_file():
+        raise FileNotFoundError(f"배포 EXE가 없습니다: {exe}")
     out = DIST / f"HwpPalette-{appinfo.VERSION}-portable.zip"
     tmp = out.with_suffix(".zip.tmp")
+    top = f"HwpPalette-{appinfo.VERSION}"
     with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zf:
-        zf.write(exe, exe.name)
+        for path in sorted(app_dir.rglob("*")):
+            if path.is_file():
+                zf.write(path, pathlib.PurePosixPath(top, path.relative_to(app_dir)))
     tmp.replace(out)                    # 원자적 — 반쪽짜리 zip 이 남지 않게
     return out
 
@@ -84,9 +94,9 @@ def main():
     rc = build_exe.main()               # exe 부터 — 검사·안내는 build_exe 가 한다
     if rc:
         return rc
-    exe = DIST / "hwp_palette.exe"
+    app_dir = build_exe.APP_DIR
 
-    z = make_portable_zip(exe)
+    z = make_portable_zip(app_dir)
     print(f"\n비설치형: {z.name}  ({z.stat().st_size / 1024 / 1024:.1f} MB)")
 
     setup = make_installer()

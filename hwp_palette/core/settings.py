@@ -70,6 +70,7 @@ DEFAULT_SPEC = {
         "bogi_type": "Solid",       # 보기박스 바깥선
         "experiment_type": "Solid", # 실험박스
     },
+    "exam_image_style": "",          # 평가원 스타일 자동 변환 ("", "exam-clean", "contour" 등)
 }
 
 

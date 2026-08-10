@@ -41,7 +41,7 @@ Name: "korean"; MessagesFile: "compiler:Languages\Korean.isl"
 Name: "desktopicon"; Description: "바탕화면 바로가기 만들기"; GroupDescription: "추가 작업:"
 
 [Files]
-Source: "..\dist\hwp_palette.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\dist\hwp_palette\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{userprograms}\HwpPalette"; Filename: "{app}\hwp_palette.exe"

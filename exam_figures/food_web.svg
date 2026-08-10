@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 240" width="360pt" height="240pt">
+  <style>.figure-line { fill: none; stroke: #000; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; } .figure-thin { fill: none; stroke: #000; stroke-width: 0.8; stroke-linecap: round; } .figure-fill { fill: #000; stroke: none; } .figure-dash { fill: none; stroke: #000; stroke-width: 0.8; stroke-dasharray: 4,3; } .figure-text { fill: #000; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; font-size: 9pt; text-anchor: middle; dominant-baseline: central; } .figure-text-left { fill: #000; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; font-size: 9pt; text-anchor: start; } .figure-arrow { fill: #000; stroke: none; } .figure-dot { fill: #000; stroke: none; } </style>
+  <line x1="180.0" y1="30.0" x2="100.0" y2="100.0" class="figure-thin"/>
+  <polygon points="100.0,100.0 103.1,94.5 105.9,97.6" class="figure-arrow"/>
+  <line x1="180.0" y1="30.0" x2="260.0" y2="100.0" class="figure-thin"/>
+  <polygon points="260.0,100.0 254.1,97.6 256.9,94.5" class="figure-arrow"/>
+  <line x1="100.0" y1="100.0" x2="180.0" y2="170.0" class="figure-thin"/>
+  <polygon points="180.0,170.0 174.1,167.6 176.9,164.5" class="figure-arrow"/>
+  <line x1="260.0" y1="100.0" x2="180.0" y2="170.0" class="figure-thin"/>
+  <polygon points="180.0,170.0 183.1,164.5 185.9,167.6" class="figure-arrow"/>
+  <circle cx="180.0" cy="30.0" r="18.0" class="figure-line"/>
+  <text x="180.0" y="30.0" class="figure-text">식물</text>
+  <circle cx="100.0" cy="100.0" r="18.0" class="figure-line"/>
+  <text x="100.0" y="100.0" class="figure-text">초식</text>
+  <circle cx="260.0" cy="100.0" r="18.0" class="figure-line"/>
+  <text x="260.0" y="100.0" class="figure-text">잡식</text>
+  <circle cx="180.0" cy="170.0" r="18.0" class="figure-line"/>
+  <text x="180.0" y="170.0" class="figure-text">육식</text>
+</svg>

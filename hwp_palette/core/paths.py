@@ -199,6 +199,13 @@ def data_dir():
     (거기서도 실패하면 예외 대신 exe 옆 경로를 돌려준다 — 저장할 때
     나는 오류가 여기서 나는 오류보다 다루기 쉽다).
     """
+    # ExamPool 같은 내장 호스트는 코드/양식팩과 사용자 데이터를 서로 다른
+    # 위치에 둔다. 명시값이 있으면 레거시 이동이나 exe 위치 추측을 하지 않는다.
+    override = os.environ.get("HWPPAL_DATA_DIR", "").strip()
+    if override:
+        folder = pathlib.Path(override).expanduser().resolve()
+        folder.mkdir(parents=True, exist_ok=True)
+        return folder
     if not is_frozen():
         # 소스 실행 — 프로젝트 루트의 data/ (2026-07-28). 쓸 수 없는 자리면
         # 예전처럼 루트를 그대로 쓴다: 데이터를 못 쓰는 것보다 지저분한 편이 낫다.
